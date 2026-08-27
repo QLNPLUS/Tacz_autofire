@@ -1,16 +1,16 @@
 package com.qyl27.taczautofire.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class AutoFireConfig {
-    public static final ForgeConfigSpec SPEC;
-    public static final ForgeConfigSpec.BooleanValue GLOBAL;
-    public static final ForgeConfigSpec.BooleanValue NBT;
-    public static final ForgeConfigSpec.BooleanValue EFFECT;
-    public static final ForgeConfigSpec.BooleanValue ATTRIBUTE;
+    public static final ModConfigSpec SPEC;
+    public static final ModConfigSpec.BooleanValue GLOBAL;
+    public static final ModConfigSpec.BooleanValue NBT;
+    public static final ModConfigSpec.BooleanValue EFFECT;
+    public static final ModConfigSpec.BooleanValue ATTRIBUTE;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         builder.comment(
                 "Server-authoritative policy for TACZ semi-automatic and burst weapons.",
                 "Forge synchronizes this value to clients when they join the world.",
