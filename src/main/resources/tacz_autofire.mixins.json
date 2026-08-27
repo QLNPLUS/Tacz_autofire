@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.qyl27.taczautofire.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "tacz_autofire.refmap.json",
+  "client": [
+    "ShootKeyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
