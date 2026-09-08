@@ -19,7 +19,7 @@ apply plugin: 'java'
 
 version = mod_version
 group = mod_group
-archivesBaseName = mod_id
+archivesBaseName = "${mod_id.replace('_', '-')}-forge-${minecraft_version}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 

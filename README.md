@@ -14,15 +14,19 @@ For a modpack-wide default, place a prepared copy at `defaultconfigs/tacz_autofi
 
 ```toml
 GLOBAL = true
+GLOBAL_EXCLUDE_AUTO = true
 NBT = true
 EFFECT = true
+ATTRIBUTE = true
 ```
 
-- `GLOBAL`: allow every TACZ gun in `SEMI` or `BURST` mode. When enabled, `NBT` and `EFFECT` do not restrict the result.
+- `GLOBAL`: allow eligible TACZ guns in `SEMI` or `BURST` mode to fire continuously. When enabled, `NBT`, `EFFECT`, and `ATTRIBUTE` do not restrict the result.
+- `GLOBAL_EXCLUDE_AUTO`: when `GLOBAL` is enabled, exclude guns whose TACZ data contains the `AUTO` fire mode. This prevents multi-mode guns from getting continuous fire in `SEMI` or `BURST`; their native `AUTO` mode is unchanged.
 - `NBT`: allow gun stacks whose root tag contains `AUTOallow:1b`.
 - `EFFECT`: allow players carrying the `tacz_autofire:autofire` effect.
+- `ATTRIBUTE`: allow players whose `tacz_autofire:autofire` attribute value is greater than zero.
 
-When `GLOBAL` is disabled, the enabled `NBT` and `EFFECT` conditions work independently and are combined with OR logic. Enabling both allows either condition to grant continuous fire.
+When `GLOBAL` is disabled, the enabled `NBT`, `EFFECT`, and `ATTRIBUTE` conditions work independently and are combined with OR logic. Enabling multiple conditions allows any of them to grant continuous fire.
 
 To opt in an existing gun with vanilla commands, drop it on the ground and run:
 
@@ -47,6 +51,15 @@ Example effect command:
 Native automatic weapons and TACZ burst weapons already marked as continuously firing retain their original behavior in either mode.
 
 The addon uses a required versioned network channel, so clients missing the addon or using an incompatible protocol cannot join. This establishes server control for normal modded clients, but it is not a replacement for anti-cheat against a deliberately modified client or an external click macro.
+
+## CurseForge 自动发布
+
+`.github/workflows/curseforge-publish.yml` 会在 GitHub Release 发布后自动构建并上传 Forge 1.20.1 和 NeoForge 1.21.1 两个 JAR，也支持从 Actions 页面手动选择 loader 和 tag。
+
+首次使用前，在 GitHub 仓库的 `Settings -> Secrets and variables -> Actions` 中配置：
+
+- Repository variable `CURSEFORGE_PROJECT_ID`: `1627202`
+- Repository secret `CURSEFORGE_TOKEN`: CurseForge API token
 
 ## Development
 

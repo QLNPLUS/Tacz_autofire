@@ -9,6 +9,11 @@ on:
         description: Git tag to build and publish
         required: true
         type: string
+      forge_ref:
+        description: Forge source branch or tag to build
+        required: false
+        default: main
+        type: string
       neoforge_ref:
         description: NeoForge source branch or tag to build
         required: false
@@ -44,7 +49,7 @@ jobs:
       - name: Check out Forge release source
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name || inputs.tag || github.ref }}
+          ref: ${{ inputs.forge_ref || github.event.release.tag_name || inputs.tag || github.ref }}
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -105,7 +110,7 @@ jobs:
           CURSEFORGE_VERSION: ${{ env.CURSEFORGE_VERSION }}
         run: |
           find build/libs -maxdepth 1 -type f -name '*.jar' -print
-          expected="tacz_autofire-${CURSEFORGE_VERSION}.jar"
+          expected="tacz-autofire-forge-1.20.1-${CURSEFORGE_VERSION}.jar"
           test -f "build/libs/$expected" || {
             echo "Missing build/libs/$expected"
             exit 1
@@ -139,7 +144,7 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           files: ${{ env.CURSEFORGE_FILE }}
           version: ${{ env.CURSEFORGE_VERSION }}
-          name: tacz_autofire-${{ env.CURSEFORGE_VERSION }}
+          name: tacz-autofire-forge-1.20.1-${{ env.CURSEFORGE_VERSION }}
           version-type: release
           changelog-file: build/curseforge-changelog.md
           loaders: forge
@@ -219,7 +224,7 @@ jobs:
         working-directory: neoforge
         run: |
           find build/libs -maxdepth 1 -type f -name '*.jar' -print
-          expected="tacz_autofire-1.21.1-${CURSEFORGE_VERSION}.jar"
+          expected="tacz-autofire-neoforge-1.21.1-${CURSEFORGE_VERSION}.jar"
           test -f "build/libs/$expected" || {
             echo "Missing build/libs/$expected"
             exit 1
@@ -254,7 +259,7 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           files: ${{ env.CURSEFORGE_FILE }}
           version: ${{ env.CURSEFORGE_VERSION }}
-          name: tacz_autofire-1.21.1-${{ env.CURSEFORGE_VERSION }}
+          name: tacz-autofire-neoforge-1.21.1-${{ env.CURSEFORGE_VERSION }}
           version-type: release
           changelog-file: neoforge/build/curseforge-changelog.md
           loaders: neoforge
