@@ -1,5 +1,15 @@
 # TACZ Auto Fire — Changelog
 
+## 1.4.0
+
+### NeoForge 1.21.1
+
+- Published the NeoForge 1.21.1 `1.4.0` release artifact.
+
+### NeoForge 1.21.1（中文）
+
+- 发布 NeoForge 1.21.1 的 `1.4.0` 版本产物。
+
 ## 1.3.0
 
 ### ✨ New Feature — Attribute Mode
