@@ -1,5 +1,17 @@
 # TACZ Auto Fire — Changelog
 
+## 1.4.0
+
+### Forge 1.20.1
+
+- Added optional compatibility with TaCZ Dual Wield so configured continuous-fire weapons can keep firing in dual-wield mode.
+- Added the Forge 1.20.1 release artifact for this version.
+
+### Forge 1.20.1（中文）
+
+- 新增 TaCZ Dual Wield 兼容：双持模式下，符合配置的枪械也可以持续开火。
+- 发布 Forge 1.20.1 的 `1.4.0` 版本产物。
+
 ## 1.3.0
 
 ### ✨ New Feature — Attribute Mode

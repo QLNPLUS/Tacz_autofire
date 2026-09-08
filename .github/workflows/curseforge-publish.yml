@@ -1,0 +1,131 @@
+name: Publish to CurseForge
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Git tag to build and publish
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: curseforge-${{ github.event.release.tag_name || inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_VERSION: ${{ github.event.release.tag_name || inputs.tag || github.ref_name }}
+
+jobs:
+  publish-forge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Forge release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag || github.ref }}
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Remove local-only Gradle settings
+        run: sed -i -E '/^systemProp\.(http|https)\.proxy(Host|Port)=|^org\.gradle\.java\.home=/d' gradle.properties
+
+      - name: Prepare CurseForge version
+        env:
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+        run: echo "CURSEFORGE_VERSION=${RELEASE_VERSION#v}" >> "$GITHUB_ENV"
+
+      - name: Validate CurseForge configuration
+        env:
+          CURSEFORGE_PROJECT_ID: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: |
+          test -n "$CURSEFORGE_PROJECT_ID" || {
+            echo "Missing repository variable CURSEFORGE_PROJECT_ID"
+            exit 1
+          }
+          test "$CURSEFORGE_PROJECT_ID" = "1627202" || {
+            echo "CURSEFORGE_PROJECT_ID must be 1627202"
+            exit 1
+          }
+          test -n "$CURSEFORGE_TOKEN" || {
+            echo "Missing repository secret CURSEFORGE_TOKEN"
+            exit 1
+          }
+
+      - name: Check out TACZ dependency
+        uses: actions/checkout@v4
+        with:
+          repository: MCModderAnchor/TACZ
+          ref: 1.20.1
+          path: TACZ-1.20.1
+
+      - name: Build TACZ dependency
+        working-directory: TACZ-1.20.1
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon
+
+      - name: Build Forge mod
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon \
+            -Ptacz_jar="$GITHUB_WORKSPACE/TACZ-1.20.1/build/libs/tacz-1.20.1-1.1.8-hotfix.jar"
+
+      - name: Verify Forge artifact
+        env:
+          CURSEFORGE_VERSION: ${{ env.CURSEFORGE_VERSION }}
+        run: |
+          find build/libs -maxdepth 1 -type f -name '*.jar' -print
+          expected="tacz_autofire-${CURSEFORGE_VERSION}.jar"
+          test -f "build/libs/$expected" || {
+            echo "Missing build/libs/$expected"
+            exit 1
+          }
+          echo "CURSEFORGE_FILE=build/libs/$expected" >> "$GITHUB_ENV"
+
+      - name: Prepare current changelog
+        env:
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+        run: |
+          version="${RELEASE_VERSION#v}"
+          awk -v version="$version" '
+            /^##[[:space:]]+/ {
+              heading = $2
+              gsub(/^\[/, "", heading)
+              gsub(/\].*$/, "", heading)
+              if (found && heading != version) exit
+              if (heading == version) found = 1
+            }
+            found { print }
+          ' CHANGELOG.md > build/curseforge-changelog.md
+          test -s build/curseforge-changelog.md || {
+            echo "Missing CHANGELOG.md section for version $version"
+            exit 1
+          }
+
+      - name: Publish Forge mod file
+        uses: Kira-NT/mc-publish@v3
+        with:
+          curseforge-id: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          files: ${{ env.CURSEFORGE_FILE }}
+          version: ${{ env.CURSEFORGE_VERSION }}
+          name: tacz_autofire-${{ env.CURSEFORGE_VERSION }}
+          version-type: release
+          changelog-file: build/curseforge-changelog.md
+          loaders: forge
+          game-versions: 1.20.1
+          java: 17
