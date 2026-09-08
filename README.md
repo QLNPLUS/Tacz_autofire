@@ -14,17 +14,19 @@ For a modpack-wide default, place a prepared copy at `defaultconfigs/tacz_autofi
 
 ```toml
 GLOBAL = true
+GLOBAL_EXCLUDE_AUTO = true
 NBT = true
 EFFECT = true
 ATTRIBUTE = true
 ```
 
-- `GLOBAL`: allow every TACZ gun in `SEMI` or `BURST` mode. When enabled, `NBT` and `EFFECT` do not restrict the result.
+- `GLOBAL`: allow eligible TACZ guns in `SEMI` or `BURST` mode to fire continuously. When enabled, `NBT`, `EFFECT`, and `ATTRIBUTE` do not restrict the result.
+- `GLOBAL_EXCLUDE_AUTO`: when `GLOBAL` is enabled, exclude guns whose TACZ data contains the `AUTO` fire mode. This prevents multi-mode guns from getting continuous fire in `SEMI` or `BURST`; their native `AUTO` mode is unchanged.
 - `NBT`: allow gun stacks whose `minecraft:custom_data` component contains `AUTOallow:1b`.
 - `EFFECT`: allow players carrying the `tacz_autofire:autofire` effect.
 - `ATTRIBUTE`: allow players whose `tacz_autofire:autofire` attribute value is greater than zero.
 
-When `GLOBAL` is disabled, the enabled `NBT` and `EFFECT` conditions work independently and are combined with OR logic. Enabling both allows either condition to grant continuous fire.
+When `GLOBAL` is disabled, the enabled `NBT`, `EFFECT`, and `ATTRIBUTE` conditions work independently and are combined with OR logic. Enabling multiple conditions allows any of them to grant continuous fire.
 
 To opt in an existing gun with vanilla commands, drop it on the ground and run:
 

@@ -4,11 +4,14 @@
 
 ### NeoForge 1.21.1
 
+- Added `GLOBAL_EXCLUDE_AUTO` to prevent `GLOBAL` from making `SEMI` or `BURST` modes continuous for TACZ guns that also support the `AUTO` fire mode; native `AUTO` remains unchanged.
 - Published the NeoForge 1.21.1 `1.4.0` release artifact.
 
 ### NeoForge 1.21.1（中文）
 
+- 新增 `GLOBAL_EXCLUDE_AUTO`：当 `GLOBAL` 开启时，包含 `AUTO` 开火模式的 TACZ 多模式枪械不会被把 `SEMI` 或 `BURST` 模式改为持续开火；原生 `AUTO` 模式不受影响。
 - 发布 NeoForge 1.21.1 的 `1.4.0` 版本产物。
+
 
 ## 1.3.0
 

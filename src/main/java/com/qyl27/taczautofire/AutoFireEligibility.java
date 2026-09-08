@@ -2,6 +2,7 @@ package com.qyl27.taczautofire;
 
 import com.qyl27.taczautofire.config.AutoFireConfig;
 import com.qyl27.taczautofire.effect.ModEffects;
+import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
 import net.minecraft.core.component.DataComponents;
@@ -26,7 +27,10 @@ public final class AutoFireEligibility {
         }
 
         if (AutoFireConfig.GLOBAL.get()) {
-            return true;
+            return !AutoFireConfig.GLOBAL_EXCLUDE_AUTO.get()
+                    || !TimelessAPI.getCommonGunIndex(gun.getGunId(stack))
+                    .map(index -> index.getGunData().getFireModeSet().contains(FireMode.AUTO))
+                    .orElse(false);
         }
 
         boolean allowedByNbt = AutoFireConfig.NBT.get()
