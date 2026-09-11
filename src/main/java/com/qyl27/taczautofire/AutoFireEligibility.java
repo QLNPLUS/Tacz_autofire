@@ -6,6 +6,7 @@ import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
@@ -27,8 +28,16 @@ public final class AutoFireEligibility {
         }
 
         if (AutoFireConfig.GLOBAL.get()) {
+            ResourceLocation gunId = gun.getGunId(stack);
+            String gunIdText = gunId.toString();
+            if (AutoFireConfig.GLOBAL_BLACKLIST.get().contains(gunIdText)) {
+                return false;
+            }
+            if (AutoFireConfig.GLOBAL_WHITELIST.get().contains(gunIdText)) {
+                return true;
+            }
             return !AutoFireConfig.GLOBAL_EXCLUDE_AUTO.get()
-                    || !TimelessAPI.getCommonGunIndex(gun.getGunId(stack))
+                    || !TimelessAPI.getCommonGunIndex(gunId)
                     .map(index -> index.getGunData().getFireModeSet().contains(FireMode.AUTO))
                     .orElse(false);
         }
