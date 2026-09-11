@@ -1,5 +1,19 @@
 # TACZ Auto Fire — Changelog
 
+## 1.4.1
+
+### Forge 1.20.1
+
+- Added global-only `GLOBAL_BLACKLIST` and `GLOBAL_WHITELIST` settings using complete TACZ gun IDs such as `tacz:ak47`.
+- Rule priority is `GLOBAL_BLACKLIST` > `GLOBAL_WHITELIST` > `GLOBAL_EXCLUDE_AUTO`; a blacklisted gun is denied even when it is also whitelisted.
+- These lists are ignored when `GLOBAL` is disabled.
+
+### Forge 1.20.1（中文）
+
+- 新增仅对 `GLOBAL` 模式生效的 `GLOBAL_BLACKLIST` 和 `GLOBAL_WHITELIST`，填写完整的 TACZ gunid，例如 `tacz:ak47`。
+- 优先级为 `GLOBAL_BLACKLIST` > `GLOBAL_WHITELIST` > `GLOBAL_EXCLUDE_AUTO`；同一个枪械同时出现在黑名单和白名单时，以黑名单为准。
+- `GLOBAL` 关闭时，黑名单和白名单不参与判断。
+
 ## 1.4.0
 
 ### Forge 1.20.1
@@ -13,8 +27,6 @@
 - 新增 TaCZ Dual Wield 兼容：双持模式下，符合配置的枪械也可以持续开火。
 - 新增 `GLOBAL_EXCLUDE_AUTO`：当 `GLOBAL` 开启时，包含 `AUTO` 开火模式的 TACZ 多模式枪械不会被把 `SEMI` 或 `BURST` 模式改为持续开火；原生 `AUTO` 模式不受影响。
 - 发布 Forge 1.20.1 的 `1.4.0` 版本产物。
-
-
 ## 1.3.0
 
 ### ✨ New Feature — Attribute Mode

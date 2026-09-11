@@ -14,6 +14,8 @@ For a modpack-wide default, place a prepared copy at `defaultconfigs/tacz_autofi
 
 ```toml
 GLOBAL = true
+GLOBAL_BLACKLIST = []
+GLOBAL_WHITELIST = []
 GLOBAL_EXCLUDE_AUTO = true
 NBT = true
 EFFECT = true
@@ -21,12 +23,16 @@ ATTRIBUTE = true
 ```
 
 - `GLOBAL`: allow eligible TACZ guns in `SEMI` or `BURST` mode to fire continuously. When enabled, `NBT`, `EFFECT`, and `ATTRIBUTE` do not restrict the result.
+- `GLOBAL_BLACKLIST`: complete TACZ gun IDs denied while `GLOBAL` is enabled, for example `["tacz:ak47"]`.
+- `GLOBAL_WHITELIST`: complete TACZ gun IDs allowed while `GLOBAL` is enabled, for example `["tacz:some_gun"]`.
 - `GLOBAL_EXCLUDE_AUTO`: when `GLOBAL` is enabled, exclude guns whose TACZ data contains the `AUTO` fire mode. This prevents multi-mode guns from getting continuous fire in `SEMI` or `BURST`; their native `AUTO` mode is unchanged.
 - `NBT`: allow gun stacks whose root tag contains `AUTOallow:1b`.
 - `EFFECT`: allow players carrying the `tacz_autofire:autofire` effect.
 - `ATTRIBUTE`: allow players whose `tacz_autofire:autofire` attribute value is greater than zero.
 
 When `GLOBAL` is disabled, the enabled `NBT`, `EFFECT`, and `ATTRIBUTE` conditions work independently and are combined with OR logic. Enabling multiple conditions allows any of them to grant continuous fire.
+
+The global rules are evaluated in this order: `GLOBAL_BLACKLIST` > `GLOBAL_WHITELIST` > `GLOBAL_EXCLUDE_AUTO`. These lists are ignored when `GLOBAL` is disabled. Use the complete TACZ `gunid` shown in the gun item's NBT, including its namespace, such as `tacz:ak47`. If a gun ID appears in both lists, the blacklist wins.
 
 To opt in an existing gun with vanilla commands, drop it on the ground and run:
 
